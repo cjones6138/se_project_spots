@@ -1,6 +1,7 @@
 .card {
   width: 413px;
 }
+
 .card__image {
   height: 413px;
   width: 413px;
@@ -12,6 +13,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 12px;
+}
+
+.card__title {
+  max-width: 353px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .card__like-button {
@@ -21,4 +34,10 @@
   border: none;
   background-color: transparent;
   opacity: 40%;
+  padding: 0;
+  margin: 0;
+}
+
+.card__like-button:hover {
+  opacity: 100%;
 }
