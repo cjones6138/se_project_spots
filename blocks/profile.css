@@ -10,6 +10,7 @@
   width: 190px;
   margin-right: 20px;
   border-radius: 8px;
+  object-fit: cover;
 }
 
 .profile__column {
@@ -60,7 +61,7 @@
   cursor: pointer;
 }
 
-.profile__edit-button__pencil-icon {
+.profile__pencil-icon {
   padding: 0;
 }
 
@@ -86,7 +87,7 @@
   cursor: pointer;
 }
 
-.profile__add-button__plus-icon {
+.profile__plus-icon {
   height: 12px;
   width: 12px;
   margin: 2px 0;
