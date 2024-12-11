@@ -27,3 +27,7 @@ This is a media sharing website. Profile header to describe an individual. Abili
 This webpage is deployed to GitHub Pages
 
 - [Deployment Link](https://cjones6138.github.io/se_project_spots/)
+
+## Video
+
+[YouTube Link](https://youtu.be/zv9JnuowMcI)
