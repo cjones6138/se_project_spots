@@ -24,3 +24,19 @@ const initialCards = [
     link: "https://unsplash.com/photos/ray-of-light-near-body-of-water--p-KCm6xB9I",
   },
 ];
+
+const profileEditButton = document.querySelector(".profile__edit-button");
+const modalCloseButton = document.querySelector(".modal__close-button");
+const editModal = document.querySelector("#edit-profile-modal");
+
+function openModal() {
+  editModal.classList.remove("modal__opened");
+}
+
+function closeModal() {
+  editModal.classList.add("modal__opened");
+}
+
+profileEditButton.addEventListener("click", openModal);
+
+modalCloseButton.addEventListener("click", closeModal);
