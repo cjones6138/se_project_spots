@@ -29,14 +29,10 @@ const profileEditButton = document.querySelector(".profile__edit-button");
 const modalCloseButton = document.querySelector(".modal__close-button");
 const editModal = document.querySelector("#edit-profile-modal");
 
-function openModal() {
-  editModal.classList.remove("modal__opened");
+function toggleModal() {
+  editModal.classList.toggle("modal__visibility");
 }
 
-function closeModal() {
-  editModal.classList.add("modal__opened");
-}
+profileEditButton.addEventListener("click", toggleModal);
 
-profileEditButton.addEventListener("click", openModal);
-
-modalCloseButton.addEventListener("click", closeModal);
+modalCloseButton.addEventListener("click", toggleModal);

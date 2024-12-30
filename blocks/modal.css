@@ -12,7 +12,7 @@
   justify-content: center;
 }
 
-.modal__opened {
+.modal__visibility {
   visibility: hidden;
 }
 
@@ -22,6 +22,7 @@
   max-width: 730px;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 8px;
 }
 
 .modal__header {
@@ -102,9 +103,11 @@
   border-radius: 8px;
   background: #212121;
   border: none;
+  transition: opacity 0.4s ease-in-out 0s;
 }
 
 .modal__submit-button:hover {
+  opacity: 80%;
   cursor: pointer;
 }
 
