@@ -25,14 +25,44 @@ const initialCards = [
   },
 ];
 
+const profileNameElement = document.querySelector(".profile__name");
+const profileDescriptionElement = document.querySelector(
+  ".profile__description"
+);
 const profileEditButton = document.querySelector(".profile__edit-button");
-const modalCloseButton = document.querySelector(".modal__close-button");
-const editModal = document.querySelector("#edit-profile-modal");
 
-function toggleModal() {
-  editModal.classList.toggle("modal__visibility");
+const modalCloseButton = document.querySelector(".modal__close-button");
+const modalSubmitButton = document.querySelector(".modal__submit-button");
+
+const editModal = document.querySelector("#edit-profile-modal");
+const editModalFormElement = editModal.querySelector(".modal__form");
+const editModalInputName = editModal.querySelector("#profile-name-input");
+const editModalInputDescription = editModal.querySelector(
+  "#profile-description-input"
+);
+
+function openModal() {
+  editModal.classList.remove("modal__visibility");
+  editModalInputName.value = profileNameElement.textContent;
+  editModalInputDescription.value = profileDescriptionElement.textContent;
 }
 
-profileEditButton.addEventListener("click", toggleModal);
+function closeModal() {
+  editModal.classList.add("modal__visibility");
+}
 
-modalCloseButton.addEventListener("click", toggleModal);
+function handleEditFormSubmit(evt) {
+  evt.preventDefault();
+
+  profileNameElement.textContent = editModalInputName.value;
+  profileDescriptionElement.textContent = editModalInputDescription.value;
+
+  closeModal();
+}
+
+// Connect the handler to the form, so it will watch for the submit event.
+editModalFormElement.addEventListener("submit", handleEditFormSubmit);
+
+profileEditButton.addEventListener("click", openModal);
+
+modalCloseButton.addEventListener("click", closeModal);
