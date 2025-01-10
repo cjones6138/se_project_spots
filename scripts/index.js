@@ -123,12 +123,23 @@ function getCardElement(data) {
     .querySelector(".card")
     .cloneNode(true);
 
+  const cardDeleteBtn = cardElement.querySelector(".card__delete-button");
   const cardTitleEl = cardElement.querySelector(".card__title");
   const cardSourceEl = cardElement.querySelector(".card__image");
+  const cardLikeBtn = cardElement.querySelector(".card__like-button");
+
+  cardDeleteBtn.addEventListener("click", () => {
+    const removeItem = cardDeleteBtn.closest(".card");
+    removeItem.remove();
+  });
 
   cardTitleEl.textContent = data.name;
   cardSourceEl.setAttribute("src", data.link);
   cardSourceEl.setAttribute("alt", data.name);
+
+  cardLikeBtn.addEventListener("click", () => {
+    cardLikeBtn.classList.toggle("card__like-button_liked");
+  });
 
   return cardElement;
 }
