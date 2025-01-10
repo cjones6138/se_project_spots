@@ -1,11 +1,12 @@
 .modal {
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  padding: 0 10px;
-  background-color: rgba(0, 0, 0, 0.5);
+  padding: 80px 10px 40px 10px;
+  background-color: rgba(33, 33, 33, 0.4);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,10 +27,17 @@
   border-radius: 8px;
 }
 
+.modal__container_type_preview {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  max-width: unset;
+  width: unset;
+}
+
 .modal__header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 32px;
 }
 
 .modal__title {
@@ -58,6 +66,19 @@
   cursor: pointer;
 }
 
+.modal__close-button_white {
+  background-image: url(../images/close_icon_white.svg);
+  opacity: 1;
+  margin-left: 12.5px;
+  background-size: 40px 40px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.modal__close-button_white:hover {
+  background-image: url(../images/close_icon_white-hover.svg);
+}
+
 .modal__form {
   display: flex;
   flex-direction: column;
@@ -67,7 +88,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 32px;
+  margin-top: 32px;
   color: rgba(33, 33, 33, 0.7);
   font-size: 16px;
   font-weight: 500;
@@ -100,6 +121,7 @@
   color: #fcf5e5;
   width: 156px;
   height: 52px;
+  margin-top: 32px;
   padding: 18px 32px;
   border-radius: 8px;
   background: #212121;
@@ -112,13 +134,37 @@
   cursor: pointer;
 }
 
+.modal__image {
+  width: 100%;
+  max-width: 80vw;
+  max-height: 80vh;
+  border-radius: 8px;
+}
+
+.modal__caption {
+  color: #ffffff;
+  background: rgba(33, 33, 33, 1);
+  padding: 4px 8px 4px 8px;
+  margin: 8px auto 0 0;
+  border-radius: 8px;
+  font-family: Poppins;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+}
+
 @media screen and (max-width: 627px) {
   .modal__container {
     padding: 12px;
   }
 
-  .modal__header {
-    margin-bottom: 24px;
+  .modal__header_type_preview {
+    flex-direction: column-reverse;
+  }
+
+  .modal__close-button_white {
+    margin: 0 0 8px auto;
   }
 
   .modal__title {
@@ -128,7 +174,7 @@
   }
 
   .modal__label {
-    margin-bottom: 24px;
+    margin-top: 24px;
   }
 
   .modal__input {
@@ -138,5 +184,6 @@
 
   .modal__submit-button {
     width: 100%;
+    margin-top: 24px;
   }
 }
