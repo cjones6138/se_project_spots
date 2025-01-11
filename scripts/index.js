@@ -75,7 +75,11 @@ function openModal(modal) {
 }
 
 function closeModal(modal) {
-  modal.classList.remove("modal_opened");
+  modal.classList.add("modal_closed");
+  setTimeout(() => {
+    modal.classList.remove("modal_opened");
+    modal.classList.remove("modal_closed");
+  }, 400);
 }
 
 // Edit profile functions
