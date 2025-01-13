@@ -37,13 +37,10 @@
 }
 
 .modal_opened {
-  /* z-index: 1; */
-  /* opacity: 1; */
   animation: fade-in 0.4s ease-in 0s forwards;
 }
 
 .modal_closed {
-  /* z-index: -1; */
   animation: fade-out 0.4s ease-out 0s forwards;
 }
 
@@ -168,7 +165,6 @@
   max-width: 80vw;
   max-height: 80vh;
   border-radius: 8px;
-  /* object-fit: contain; */
 }
 
 .modal__caption {
@@ -185,8 +181,16 @@
 }
 
 @media screen and (max-width: 627px) {
+  .modal#preview-modal {
+    padding: 0 16px;
+  }
+
   .modal__container {
     padding: 12px;
+  }
+
+  .modal__container_type_preview {
+    padding: 0;
   }
 
   .modal__header_type_preview {
@@ -215,6 +219,11 @@
   .modal__submit-button {
     width: 100%;
     margin-top: 24px;
+  }
+
+  .modal__image {
+    max-width: unset;
+    max-height: unset;
   }
 
   .modal__caption {
