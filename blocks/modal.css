@@ -140,6 +140,14 @@
   cursor: pointer;
 }
 
+.modal__input_type_error {
+  border: 1px solid rgba(255, 0, 0, 0.6);
+}
+
+.modal__input_type_error:hover {
+  border: 1px solid rgba(255, 0, 0, 0.6);
+}
+
 .modal__submit-button {
   font-size: 16px;
   font-weight: 500;
@@ -160,6 +168,14 @@
   cursor: pointer;
 }
 
+.modal__submit-button_inactive {
+  opacity: 40%;
+}
+
+.modal__submit-button_inactive:hover {
+  opacity: 40%;
+}
+
 .modal__image {
   width: 100%;
   max-width: 80vw;
@@ -178,6 +194,11 @@
   font-weight: 500;
   line-height: 24px;
   text-align: left;
+}
+
+.modal__error {
+  color: #f00;
+  opacity: 70%;
 }
 
 @media screen and (max-width: 627px) {
