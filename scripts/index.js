@@ -45,12 +45,16 @@ const editModalInputDescription = editModalFormElement.querySelector(
 
 // New card elements
 const addCardModal = document.querySelector("#add-card-modal");
+
 const addCardModalFormElement = document.forms["add-card-form"];
 const addCardModalInputLink = addCardModalFormElement.querySelector(
   "#add-card-link-input"
 );
 const addCardModalInputName = addCardModalFormElement.querySelector(
   "#add-card-name-input"
+);
+const addCardModalSubmitButton = addCardModalFormElement.querySelector(
+  ".modal__submit-button"
 );
 
 // Preview modal elements
@@ -98,6 +102,10 @@ editModalFormElement.addEventListener("submit", handleEditFormSubmit);
 profileEditButton.addEventListener("click", () => {
   editModalInputName.value = profileNameElement.textContent;
   editModalInputDescription.value = profileDescriptionElement.textContent;
+  resetValidation(editModalFormElement, [
+    editModalInputName,
+    editModalInputDescription,
+  ]);
   openModal(editModal);
 });
 
@@ -115,6 +123,7 @@ function handleAddCardFormSubmit(evt) {
   cardsList.prepend(cardElement);
 
   evt.target.reset();
+  inactivateSubmitButton(addCardModalSubmitButton);
   closeModal(addCardModal);
 }
 
