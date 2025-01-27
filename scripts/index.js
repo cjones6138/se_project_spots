@@ -66,7 +66,7 @@ const previewModalCaptionEl = previewModal.querySelector(".modal__caption");
 const cardTemplate = document.querySelector("#card-template");
 const cardsList = document.querySelector(".cards__list");
 
-// Find all close buttons
+// Find all of certain elements
 const closeButtons = document.querySelectorAll(".modal__close-button");
 const modalList = document.querySelectorAll(".modal");
 
@@ -103,8 +103,8 @@ function handleClickOverlayModalClose(evt) {
 }
 
 function handleEscapeModalClose(evt) {
-  const modal = document.querySelector(".modal_opened");
   if (evt.key === "Escape") {
+    const modal = document.querySelector(".modal_opened");
     closeModal(modal);
   }
 }
@@ -141,8 +141,7 @@ function handleAddCardFormSubmit(evt) {
     link: addCardModalInputLink.value,
   };
 
-  const cardElement = getCardElement(card);
-  cardsList.prepend(cardElement);
+  renderCard(card);
 
   evt.target.reset();
   inactivateSubmitButton(addCardModalSubmitButton, settings);
@@ -194,6 +193,11 @@ function getCardElement(data) {
 
 // Card creation loop from predefined object array
 initialCards.forEach(function (item) {
-  const cardElement = getCardElement(item);
-  cardsList.prepend(cardElement);
+  renderCard(item);
 });
+
+// Organize cards to page one at a time
+function renderCard(item, method = "prepend") {
+  const cardElement = getCardElement(item);
+  cardsList[method](cardElement);
+}
