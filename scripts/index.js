@@ -73,10 +73,14 @@ const modalList = document.querySelectorAll(".modal");
 // Modal functions
 function openModal(modal) {
   modal.classList.add("modal_opened");
+  if (modal.classList.contains("modal_opened")) {
+    document.addEventListener("keydown", handleEscapeModalClose);
+  }
 }
 
 function closeModal(modal) {
   modal.classList.add("modal_closed");
+  document.removeEventListener("keydown", handleEscapeModalClose);
   setTimeout(() => {
     modal.classList.remove("modal_opened");
     modal.classList.remove("modal_closed");
@@ -93,9 +97,15 @@ modalList.forEach((modal) => {
 });
 
 function handleClickOverlayModalClose(evt) {
-  console.log(evt.target.classList.contains("modal_opened"));
   if (evt.target.classList.contains("modal_opened")) {
     closeModal(evt.target);
+  }
+}
+
+function handleEscapeModalClose(evt) {
+  const modal = document.querySelector(".modal_opened");
+  if (evt.key === "Escape") {
+    closeModal(modal);
   }
 }
 
