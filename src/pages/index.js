@@ -1,3 +1,20 @@
+import "./index.css";
+import { enableValidation, settings, resetValidation, inactivateSubmitButton } from "../scripts/validation.js";
+
+import avatarSrc from "../images/avatar.jpg";
+import logoSrc from "../images/logo.svg";
+import editIconSrc from "../images/edit_icon.svg";
+import profilePlusIcon from "../images/plus.svg";
+
+const avatarImage = document.getElementById("profile__avatar");
+avatarImage.src = avatarSrc;
+const logoImage = document.getElementById("header__logo");
+logoImage.src = logoSrc;
+const editIconImage = document.getElementById("profile__pencil-icon");
+editIconImage.src = editIconSrc;
+const profilePlusImage = document.getElementById("profile__plus-icon");
+profilePlusImage.src = profilePlusIcon;
+
 const initialCards = [
   {
     name: "Dark Eclipse",
@@ -201,3 +218,5 @@ function renderCard(item, method = "prepend") {
   const cardElement = getCardElement(item);
   cardsList[method](cardElement);
 }
+
+enableValidation(settings);
