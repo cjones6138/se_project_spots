@@ -1,5 +1,6 @@
 import "./index.css";
 import { enableValidation, settings, resetValidation, inactivateSubmitButton } from "../scripts/validation.js";
+import Api from "../utils/Api.js";
 
 import avatarSrc from "../images/avatar.jpg";
 import logoSrc from "../images/logo.svg";
@@ -15,32 +16,51 @@ editIconImage.src = editIconSrc;
 const profilePlusImage = document.getElementById("profile__plus-icon");
 profilePlusImage.src = profilePlusIcon;
 
-const initialCards = [
-  {
-    name: "Dark Eclipse",
-    link: "https://images.unsplash.com/photo-1504192010706-dd7f569ee2be?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Red Sky",
-    link: "https://images.unsplash.com/photo-1489549132488-d00b7eee80f1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Green Aura",
-    link: "https://images.unsplash.com/photo-1443926818681-717d074a57af?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Harvest Moon",
-    link: "https://images.unsplash.com/photo-1443456066412-3e3ea69ee37c?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Impact Crater",
-    link: "https://images.unsplash.com/photo-1451188502541-13943edb6acb?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Shuttle Launch",
-    link: "https://images.unsplash.com/photo-1457364887197-9150188c107b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+// const initialCards = [
+//   {
+//     name: "Dark Eclipse",
+//     link: "https://images.unsplash.com/photo-1504192010706-dd7f569ee2be?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Red Sky",
+//     link: "https://images.unsplash.com/photo-1489549132488-d00b7eee80f1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Green Aura",
+//     link: "https://images.unsplash.com/photo-1443926818681-717d074a57af?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Harvest Moon",
+//     link: "https://images.unsplash.com/photo-1443456066412-3e3ea69ee37c?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Impact Crater",
+//     link: "https://images.unsplash.com/photo-1451188502541-13943edb6acb?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Shuttle Launch",
+//     link: "https://images.unsplash.com/photo-1457364887197-9150188c107b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+// ];
+
+const api = new Api({
+  baseUrl: "https://around-api.en.tripleten-services.com/v1",
+  headers: {
+    authorization: "0bc13be7-62aa-49a1-afb1-ce7eb105e162",
+    "Content-Type": "application/json"
+  }
+});
+
+// Card creation loop from API
+
+api.getAppInfo().then(([cards]) => {
+  console.log(cards);
+  cards.forEach(function (item) {
+    renderCard(item);
+  })
+}).catch((err) => {
+  console.error(err);
+});
 
 // Profile elements
 const profileNameElement = document.querySelector(".profile__name");
@@ -208,10 +228,6 @@ function getCardElement(data) {
   return cardElement;
 }
 
-// Card creation loop from predefined object array
-initialCards.forEach(function (item) {
-  renderCard(item);
-});
 
 // Organize cards to page one at a time
 function renderCard(item, method = "prepend") {
