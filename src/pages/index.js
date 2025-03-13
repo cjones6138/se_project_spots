@@ -1,10 +1,16 @@
 import "./index.css";
-import { enableValidation, settings, resetValidation, inactivateSubmitButton } from "../scripts/validation.js";
+import {
+  enableValidation,
+  settings,
+  resetValidation,
+  inactivateSubmitButton,
+} from "../scripts/validation.js";
 import Api from "../utils/Api.js";
 
 import avatarSrc from "../images/avatar.jpg";
 import logoSrc from "../images/logo.svg";
 import editIconSrc from "../images/edit_icon.svg";
+import editIconWhiteSrc from "../images/edit_icon_white.svg";
 import profilePlusIcon from "../images/plus.svg";
 
 const avatarImage = document.getElementById("profile__avatar");
@@ -13,6 +19,8 @@ const logoImage = document.getElementById("header__logo");
 logoImage.src = logoSrc;
 const editIconImage = document.getElementById("profile__pencil-icon");
 editIconImage.src = editIconSrc;
+const editAvatarImage = document.getElementById("avatar__pencil-icon");
+editAvatarImage.src = editIconWhiteSrc;
 const profilePlusImage = document.getElementById("profile__plus-icon");
 profilePlusImage.src = profilePlusIcon;
 
@@ -47,20 +55,25 @@ const api = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
   headers: {
     authorization: "0bc13be7-62aa-49a1-afb1-ce7eb105e162",
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 // Card creation loop from API
 
-api.getAppInfo().then(([cards]) => {
-  console.log(cards);
-  cards.forEach(function (item) {
-    renderCard(item);
+api
+  .getAppInfo()
+  .then(([cards, { about, avatar, name }]) => {
+    cards.forEach(function (item) {
+      renderCard(item);
+    });
+    profileDescriptionElement.textContent = about;
+    avatarImage.src = avatar;
+    profileNameElement.textContent = name;
   })
-}).catch((err) => {
-  console.error(err);
-});
+  .catch((err) => {
+    console.error(err);
+  });
 
 // Profile elements
 const profileNameElement = document.querySelector(".profile__name");
@@ -78,6 +91,14 @@ const editModalInputName = editModalFormElement.querySelector(
 );
 const editModalInputDescription = editModalFormElement.querySelector(
   "#profile-description-input"
+);
+
+// Profile avatar elements
+const avatarEditButton = document.querySelector(".profile__avatar-button");
+const avatarEditModal = document.querySelector("#edit-avatar-modal");
+const avatarModalFormElement = document.forms["edit-avatar-form"];
+const avatarModalInput = avatarModalFormElement.querySelector(
+  "#profile-avatar-input"
 );
 
 // New card elements
@@ -102,6 +123,9 @@ const previewModalCaptionEl = previewModal.querySelector(".modal__caption");
 // Card display elements
 const cardTemplate = document.querySelector("#card-template");
 const cardsList = document.querySelector(".cards__list");
+
+// Delete form elements
+const deleteModal = document.querySelector("#delete-modal");
 
 // Find all of certain elements
 const closeButtons = document.querySelectorAll(".modal__close-button");
@@ -146,17 +170,41 @@ function handleEscapeModalClose(evt) {
   }
 }
 
+// Edit avatar functions
+function handleAvatarSubmit(evt) {
+  evt.preventDefault();
+  api
+    .editAvatarInfo(avatarModalInput.value)
+    .then((data) => {
+      avatarImage.src = data.avatar;
+
+      closeModal(avatarEditModal);
+    })
+    .catch(console.error);
+}
+
+avatarEditButton.addEventListener("click", () => {
+  openModal(avatarEditModal);
+});
+
+avatarModalFormElement.addEventListener("submit", handleAvatarSubmit);
+
 // Edit profile functions
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
+  api
+    .editUserInfo({
+      name: editModalInputName.value,
+      about: editModalInputDescription.value,
+    })
+    .then((data) => {
+      profileNameElement.textContent = data.name;
+      profileDescriptionElement.textContent = data.about;
 
-  profileNameElement.textContent = editModalInputName.value;
-  profileDescriptionElement.textContent = editModalInputDescription.value;
-
-  closeModal(editModal);
+      closeModal(editModal);
+    })
+    .catch(console.error);
 }
-
-editModalFormElement.addEventListener("submit", handleEditFormSubmit);
 
 profileEditButton.addEventListener("click", () => {
   editModalInputName.value = profileNameElement.textContent;
@@ -168,6 +216,8 @@ profileEditButton.addEventListener("click", () => {
   );
   openModal(editModal);
 });
+
+editModalFormElement.addEventListener("submit", handleEditFormSubmit);
 
 // Add card functions
 function handleAddCardFormSubmit(evt) {
@@ -204,7 +254,8 @@ function getCardElement(data) {
 
   // Card delete button event listener
   cardDeleteBtn.addEventListener("click", () => {
-    cardElement.remove();
+    openModal(deleteModal);
+    // cardElement.remove();
   });
 
   // Define card attributes
@@ -227,7 +278,6 @@ function getCardElement(data) {
 
   return cardElement;
 }
-
 
 // Organize cards to page one at a time
 function renderCard(item, method = "prepend") {
