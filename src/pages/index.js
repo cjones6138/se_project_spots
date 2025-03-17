@@ -126,10 +126,16 @@ const cardsList = document.querySelector(".cards__list");
 
 // Delete form elements
 const deleteModal = document.querySelector("#delete-modal");
+const deleteForm = document.forms["delete-card-form"];
+const deleteModalCancelButton = deleteModal.querySelector(
+  ".modal__submit-button_cancel"
+);
 
 // Find all of certain elements
 const closeButtons = document.querySelectorAll(".modal__close-button");
 const modalList = document.querySelectorAll(".modal");
+
+let selectedCard, selectedCardId;
 
 // Modal functions
 function openModal(modal) {
@@ -223,16 +229,19 @@ editModalFormElement.addEventListener("submit", handleEditFormSubmit);
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
 
-  const card = {
-    name: addCardModalInputName.value,
-    link: addCardModalInputLink.value,
-  };
+  api
+    .addCard({
+      name: addCardModalInputName.value,
+      link: addCardModalInputLink.value,
+    })
+    .then((data) => {
+      renderCard(data);
 
-  renderCard(card);
-
-  evt.target.reset();
-  inactivateSubmitButton(addCardModalSubmitButton, settings);
-  closeModal(addCardModal);
+      evt.target.reset();
+      inactivateSubmitButton(addCardModalSubmitButton, settings);
+      closeModal(addCardModal);
+    })
+    .catch(console.error);
 }
 
 addCardModalFormElement.addEventListener("submit", handleAddCardFormSubmit);
@@ -253,10 +262,9 @@ function getCardElement(data) {
   const cardLikeBtn = cardElement.querySelector(".card__like-button");
 
   // Card delete button event listener
-  cardDeleteBtn.addEventListener("click", () => {
-    openModal(deleteModal);
-    // cardElement.remove();
-  });
+  cardDeleteBtn.addEventListener("click", (evt) =>
+    handleDeleteCard(cardElement, data._id)
+  );
 
   // Define card attributes
   cardTitleEl.textContent = data.name;
@@ -277,6 +285,29 @@ function getCardElement(data) {
   });
 
   return cardElement;
+}
+
+function handleDeleteCard(cardElement, cardId) {
+  selectedCard = cardElement;
+  selectedCardId = cardId;
+  openModal(deleteModal);
+}
+
+deleteForm.addEventListener("submit", handleDeleteSubmit);
+
+deleteModalCancelButton.addEventListener("click", () => {
+  closeModal(deleteModal);
+});
+
+function handleDeleteSubmit(evt) {
+  evt.preventDefault();
+  api
+    .deleteCard(selectedCardId)
+    .then(() => {
+      location.reload();
+      closeModal(deleteModal);
+    })
+    .catch(console.error);
 }
 
 // Organize cards to page one at a time
