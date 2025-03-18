@@ -1,9 +1,17 @@
 import "./index.css";
-import { enableValidation, settings, resetValidation, inactivateSubmitButton } from "../scripts/validation.js";
+import {
+  enableValidation,
+  settings,
+  resetValidation,
+  inactivateSubmitButton,
+} from "../scripts/validation.js";
+import { setButtonText, handleSubmit } from "../utils/helper.js";
+import Api from "../utils/Api.js";
 
 import avatarSrc from "../images/avatar.jpg";
 import logoSrc from "../images/logo.svg";
 import editIconSrc from "../images/edit_icon.svg";
+import editIconWhiteSrc from "../images/edit_icon_white.svg";
 import profilePlusIcon from "../images/plus.svg";
 
 const avatarImage = document.getElementById("profile__avatar");
@@ -12,35 +20,61 @@ const logoImage = document.getElementById("header__logo");
 logoImage.src = logoSrc;
 const editIconImage = document.getElementById("profile__pencil-icon");
 editIconImage.src = editIconSrc;
+const editAvatarImage = document.getElementById("avatar__pencil-icon");
+editAvatarImage.src = editIconWhiteSrc;
 const profilePlusImage = document.getElementById("profile__plus-icon");
 profilePlusImage.src = profilePlusIcon;
 
-const initialCards = [
-  {
-    name: "Dark Eclipse",
-    link: "https://images.unsplash.com/photo-1504192010706-dd7f569ee2be?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+// const initialCards = [
+//   {
+//     name: "Dark Eclipse",
+//     link: "https://images.unsplash.com/photo-1504192010706-dd7f569ee2be?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Red Sky",
+//     link: "https://images.unsplash.com/photo-1489549132488-d00b7eee80f1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Green Aura",
+//     link: "https://images.unsplash.com/photo-1443926818681-717d074a57af?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Harvest Moon",
+//     link: "https://images.unsplash.com/photo-1443456066412-3e3ea69ee37c?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Impact Crater",
+//     link: "https://images.unsplash.com/photo-1451188502541-13943edb6acb?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+//   {
+//     name: "Shuttle Launch",
+//     link: "https://images.unsplash.com/photo-1457364887197-9150188c107b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//   },
+// ];
+
+const api = new Api({
+  baseUrl: "https://around-api.en.tripleten-services.com/v1",
+  headers: {
+    authorization: "0bc13be7-62aa-49a1-afb1-ce7eb105e162",
+    "Content-Type": "application/json",
   },
-  {
-    name: "Red Sky",
-    link: "https://images.unsplash.com/photo-1489549132488-d00b7eee80f1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Green Aura",
-    link: "https://images.unsplash.com/photo-1443926818681-717d074a57af?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Harvest Moon",
-    link: "https://images.unsplash.com/photo-1443456066412-3e3ea69ee37c?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Impact Crater",
-    link: "https://images.unsplash.com/photo-1451188502541-13943edb6acb?q=80&w=1228&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    name: "Shuttle Launch",
-    link: "https://images.unsplash.com/photo-1457364887197-9150188c107b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+});
+
+// Card creation loop from API
+
+api
+  .getAppInfo()
+  .then(([cards, { about, avatar, name }]) => {
+    cards.forEach(function (item) {
+      renderCard(item);
+    });
+    profileDescriptionElement.textContent = about;
+    avatarImage.src = avatar;
+    profileNameElement.textContent = name;
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 // Profile elements
 const profileNameElement = document.querySelector(".profile__name");
@@ -58,6 +92,14 @@ const editModalInputName = editModalFormElement.querySelector(
 );
 const editModalInputDescription = editModalFormElement.querySelector(
   "#profile-description-input"
+);
+
+// Profile avatar elements
+const avatarEditButton = document.querySelector(".profile__avatar-button");
+const avatarEditModal = document.querySelector("#edit-avatar-modal");
+const avatarModalFormElement = document.forms["edit-avatar-form"];
+const avatarModalInput = avatarModalFormElement.querySelector(
+  "#profile-avatar-input"
 );
 
 // New card elements
@@ -83,9 +125,18 @@ const previewModalCaptionEl = previewModal.querySelector(".modal__caption");
 const cardTemplate = document.querySelector("#card-template");
 const cardsList = document.querySelector(".cards__list");
 
+// Delete form elements
+const deleteModal = document.querySelector("#delete-modal");
+const deleteForm = document.forms["delete-card-form"];
+const deleteModalCancelButton = deleteModal.querySelector(
+  ".modal__submit-button_cancel"
+);
+
 // Find all of certain elements
 const closeButtons = document.querySelectorAll(".modal__close-button");
 const modalList = document.querySelectorAll(".modal");
+
+let selectedCard, selectedCardId;
 
 // Modal functions
 function openModal(modal) {
@@ -126,17 +177,45 @@ function handleEscapeModalClose(evt) {
   }
 }
 
+// Edit avatar functions
+function handleAvatarSubmit(evt) {
+  evt.preventDefault();
+
+  function makeRequest() {
+    return api.editAvatarInfo(avatarModalInput.value).then((data) => {
+      avatarImage.src = data.avatar;
+
+      closeModal(avatarEditModal);
+    });
+  }
+  handleSubmit(makeRequest, evt);
+}
+
+avatarEditButton.addEventListener("click", () => {
+  openModal(avatarEditModal);
+});
+
+avatarModalFormElement.addEventListener("submit", handleAvatarSubmit);
+
 // Edit profile functions
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
 
-  profileNameElement.textContent = editModalInputName.value;
-  profileDescriptionElement.textContent = editModalInputDescription.value;
+  function makeRequest() {
+    return api
+      .editUserInfo({
+        name: editModalInputName.value,
+        about: editModalInputDescription.value,
+      })
+      .then((data) => {
+        profileNameElement.textContent = data.name;
+        profileDescriptionElement.textContent = data.about;
 
-  closeModal(editModal);
+        closeModal(editModal);
+      });
+  }
+  handleSubmit(makeRequest, evt);
 }
-
-editModalFormElement.addEventListener("submit", handleEditFormSubmit);
 
 profileEditButton.addEventListener("click", () => {
   editModalInputName.value = profileNameElement.textContent;
@@ -149,20 +228,27 @@ profileEditButton.addEventListener("click", () => {
   openModal(editModal);
 });
 
+editModalFormElement.addEventListener("submit", handleEditFormSubmit);
+
 // Add card functions
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
 
-  const card = {
-    name: addCardModalInputName.value,
-    link: addCardModalInputLink.value,
-  };
+  function makeRequest() {
+    return api
+      .addCard({
+        name: addCardModalInputName.value,
+        link: addCardModalInputLink.value,
+      })
+      .then((data) => {
+        renderCard(data);
 
-  renderCard(card);
-
-  evt.target.reset();
-  inactivateSubmitButton(addCardModalSubmitButton, settings);
-  closeModal(addCardModal);
+        evt.target.reset();
+        inactivateSubmitButton(addCardModalSubmitButton, settings);
+        closeModal(addCardModal);
+      });
+  }
+  handleSubmit(makeRequest, evt);
 }
 
 addCardModalFormElement.addEventListener("submit", handleAddCardFormSubmit);
@@ -183,9 +269,9 @@ function getCardElement(data) {
   const cardLikeBtn = cardElement.querySelector(".card__like-button");
 
   // Card delete button event listener
-  cardDeleteBtn.addEventListener("click", () => {
-    cardElement.remove();
-  });
+  cardDeleteBtn.addEventListener("click", () =>
+    handleDeleteCard(cardElement, data._id)
+  );
 
   // Define card attributes
   cardTitleEl.textContent = data.name;
@@ -201,17 +287,55 @@ function getCardElement(data) {
   });
 
   // Card like button event listener
-  cardLikeBtn.addEventListener("click", () => {
-    cardLikeBtn.classList.toggle("card__like-button_liked");
-  });
+  cardLikeBtn.addEventListener("click", (evt) =>
+    handleLike(evt, data._id, data.isLiked)
+  );
+  if (data.isLiked) {
+    cardLikeBtn.classList.add("card__like-button_liked");
+  }
 
   return cardElement;
 }
 
-// Card creation loop from predefined object array
-initialCards.forEach(function (item) {
-  renderCard(item);
+function handleLike(evt, id, isLiked) {
+  api
+    .handleLike(id, isLiked)
+    .then(() => {
+      evt.target.classList.toggle("card__like-button_liked");
+    })
+    .catch(console.error);
+}
+
+// Delete card functions
+function handleDeleteCard(cardElement, cardId) {
+  selectedCard = cardElement;
+  selectedCardId = cardId;
+  openModal(deleteModal);
+}
+
+deleteForm.addEventListener("submit", handleDeleteSubmit);
+
+deleteModalCancelButton.addEventListener("click", () => {
+  closeModal(deleteModal);
 });
+
+function handleDeleteSubmit(evt) {
+  evt.preventDefault();
+
+  const deleteButton = evt.submitter;
+  setButtonText(true, deleteButton, "Delete", "Deleting...");
+
+  api
+    .deleteCard(selectedCardId)
+    .then(() => {
+      selectedCard.remove();
+      closeModal(deleteModal);
+    })
+    .catch(console.error)
+    .finally(() => {
+      setButtonText(false, deleteButton, "Delete", "Deleting...");
+    });
+}
 
 // Organize cards to page one at a time
 function renderCard(item, method = "prepend") {
