@@ -248,9 +248,12 @@
   }
 
   .modal__content {
-    justify-content: center;
     width: 300px;
     padding: 12px;
+  }
+
+  #delete-modal .modal__form {
+    flex-direction: column;
   }
 
   .modal__container_type_preview {
